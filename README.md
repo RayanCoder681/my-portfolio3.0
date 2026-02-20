@@ -1,1 +1,2 @@
-// My portfolio
+This is my portfolio.
+Made with React,vite, Tailwindcss...
