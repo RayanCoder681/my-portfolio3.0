@@ -1,46 +1,52 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import { Brain, Heart, ArrowUp } from 'lucide-react';
+import { personalInfo } from '../data';
 
-export const Footer: React.FC = () => (
-  <motion.footer
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8 }}
-    style={{
-      padding: '4rem 2rem',
-      borderTop: '1px solid var(--border)',
-      textAlign: 'center',
-      color: 'var(--muted)',
-      fontSize: '0.85rem',
-      position: 'relative',
-      zIndex: 1,
-      background: 'rgba(0,0,0,0.1)',
-    }}
-  >
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10, marginBottom: 16 }} className="mono">
-      <motion.div
-        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: 'var(--accent)',
-          boxShadow: '0 0 10px var(--accent)',
-        }}
-      />
-      <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-        System Operational: Architecture v2.5.0
-      </span>
-    </div>
-    <p>Engineered with Precision &amp; Mathematical Rigor.</p>
-    <motion.p
-      whileHover={{ opacity: 1, color: 'var(--primary)' }}
-      style={{ marginTop: 12, opacity: 0.25, fontSize: '0.7rem', cursor: 'default', transition: 'all 0.3s' }}
-      className="mono"
-    >
-      01001110 01000101 01011000 01010101 01010011
-    </motion.p>
-  </motion.footer>
-);
+const Footer = () => {
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  return (
+    <footer className="border-t border-neural-300/10 bg-void-700/50 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Left: Logo */}
+          <div className="flex items-center gap-2">
+            <Brain className="w-5 h-5 text-neural-300" />
+            <span className="font-mono text-sm text-void-200">
+              {personalInfo.name} <span className="text-neural-300">·</span> ML & Data Science Student
+            </span>
+          </div>
+
+          {/* Center: Built with */}
+          <div className="flex items-center gap-1.5 text-void-300 text-sm">
+            <span>Built with</span>
+            <Heart className="w-3.5 h-3.5 text-plasma-500 fill-plasma-500" />
+            <span>using React, TypeScript & Tailwind</span>
+          </div>
+
+          {/* Right: Back to top */}
+          <motion.button
+            onClick={scrollToTop}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2 rounded border border-neural-300/20 text-neural-300 font-mono text-xs hover:bg-neural-300/10 transition-all"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+            Back to top
+          </motion.button>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-void-400/20 text-center">
+          <p className="font-mono text-xs text-void-300">
+            © {new Date().getFullYear()} {personalInfo.name}. All rights reserved.{' '}
+            <span className="text-neural-300/60 ml-2">
+              Crafted with precision & passion for AI.
+            </span>
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

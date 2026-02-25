@@ -1,168 +1,178 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Icon, icons } from './Icon';
-import { useTheme, sharedStyles } from '../context/ThemeContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Brain, Github, Linkedin, FileText } from 'lucide-react';
+import { personalInfo } from '../data';
 
-const NAV_ITEMS = [
-  { name: 'Home', path: '/' },
-  { name: 'About', path: '/about' },
-  { name: 'Skills', path: '/skills' },
-  { name: 'Projects', path: '/projects' },
-  { name: 'Web Dev', path: '/web-dev' },
-  { name: 'Contact', path: '/contact' }
+const navItems = [
+  { label: '01.about', href: '#about' },
+  { label: '02.skills', href: '#skills' },
+  { label: '03.projects', href: '#projects' },
+  { label: '04.experience', href: '#experience' },
+  { label: '05.publications', href: '#publications' },
+  { label: '06.contact', href: '#contact' },
 ];
 
-export const Navbar: React.FC = () => {
-  const { toggleTheme, t } = useTheme();
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
 
-  // Animation Variants
-  const navContainer = {
-    hidden: { y: -100 },
-    show: { y: 0, transition: { type: 'spring' as const, stiffness: 120, damping: 20, staggerChildren: 0.1 } }
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
 
-  const navItem = {
-    hidden: { opacity: 0, y: -20 },
-    show: { opacity: 1, y: 0 }
+      const sections = navItems
+        .map((item) => item.href.replace('#', ''))
+        .filter(Boolean);
+
+      for (const section of sections.reverse()) {
+        const el = document.getElementById(section);
+        if (el && window.scrollY >= el.offsetTop - 100) {
+          setActiveSection(`#${section}`);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleNavClick = (href: string) => {
+    setMenuOpen(false);
+    if (location.pathname !== '/') return;
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <motion.nav
-      variants={navContainer}
-      initial="hidden"
-      animate="show"
-      style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 100,
-        padding: '1rem 2rem',
-        backdropFilter: 'blur(30px)',
-        WebkitBackdropFilter: 'blur(30px)',
-        background: t ? 'rgba(5,7,17,0.7)' : 'rgba(248,250,252,0.7)',
-        borderBottom: `1px solid ${t ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {/* Logo */}
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <motion.div
-            variants={navItem}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1.4rem', letterSpacing: '-0.03em', color: 'var(--primary)', cursor: 'pointer' }}
-          >
-            NEXUS_AI<span style={{ color: 'var(--accent)' }}>.</span>
-          </motion.div>
-        </Link>
-
-        {/* Desktop links */}
-        <div className="desktop-nav" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          {NAV_ITEMS.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
+    <>
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? 'bg-void-800/90 backdrop-blur-xl border-b border-neural-300/10 shadow-neural'
+          : 'bg-transparent'
+          }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 group">
               <motion.div
-                variants={navItem}
-                key={item.name}
-                whileHover={{ y: -2 }}
+                whileHover={{ rotate: 180 }}
+                transition={{ duration: 0.4 }}
+                className="w-8 h-8 border border-neural-300/40 rounded flex items-center justify-center group-hover:border-neural-300"
               >
-                <Link
-                  to={item.path}
-                  style={{
-                    display: 'block',
-                    padding: '0.4rem 0.8rem',
-                    borderRadius: '8px',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
-                    color: isActive ? 'var(--bg)' : 'var(--muted)',
-                    background: isActive ? 'var(--primary)' : 'transparent',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s',
-                    userSelect: 'none',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--primary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--muted)';
-                  }}
-                >
-                  {item.name}
-                </Link>
+                <Brain className="w-4 h-4 text-neural-300" />
               </motion.div>
-            );
-          })}
-        </div>
+              <span className="font-mono text-sm text-neural-300 tracking-widest">
+                Rayan<span className="text-plasma-500">.</span>Diatsa
+              </span>
+            </Link>
 
-        {/* Controls */}
-        <motion.div variants={navItem} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <motion.button
-            whileHover={{ scale: 1.1, rotate: 15 }}
-            whileTap={{ scale: 0.9 }}
-            style={sharedStyles.themeBtn}
-            onClick={toggleTheme}
-            title="Toggle theme"
-          >
-            <Icon d={t ? icons.sun : icons.moon} size={16} />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="mobile-btn"
-            style={{ ...sharedStyles.themeBtn, display: 'none' }}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <Icon d={menuOpen ? icons.x : icons.menu} size={18} />
-          </motion.button>
-        </motion.div>
-      </div>
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-8">
+              {navItems.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`nav-link ${activeSection === item.href ? 'active' : ''}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Social + CTA */}
+            <div className="hidden md:flex items-center gap-4">
+              {/* <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-void-200 hover:text-neural-300 transition-colors"
+              >
+                <Github className="w-4 h-4" />
+              </a>
+              <a
+                href={personalInfo.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-void-200 hover:text-neural-300 transition-colors"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a> */}
+              <a
+                href="/rayan-diatsa-cv.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-neural px-4 py-2 text-xs rounded flex items-center gap-2"
+              >
+                <FileText className="w-3 h-3" />
+                Obtenir mon CV
+              </a>
+            </div>
+
+            {/* Mobile burger */}
+            <button
+              className="md:hidden text-void-100 hover:text-neural-300 transition-colors"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </motion.nav>
 
       {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            style={{ padding: '1rem 2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.8rem', borderTop: '1px solid var(--border)', overflow: 'hidden' }}
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="fixed inset-y-0 right-0 w-72 z-40 bg-void-700/95 backdrop-blur-xl border-l border-neural-300/10 flex flex-col"
           >
-            {NAV_ITEMS.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <motion.div
-                  whileTap={{ scale: 0.95 }}
-                  key={item.name}
+            <div className="flex flex-col gap-6 p-8 mt-20">
+              {navItems.map((item, i) => (
+                <motion.button
+                  key={item.label}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  onClick={() => handleNavClick(item.href)}
+                  className="text-left nav-link text-lg"
                 >
-                  <Link
-                    to={item.path}
-                    onClick={() => setMenuOpen(false)}
-                    style={{
-                      display: 'block',
-                      padding: '0.6rem 1rem',
-                      borderRadius: '8px',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.12em',
-                      color: isActive ? 'var(--bg)' : 'var(--muted)',
-                      background: isActive ? 'var(--primary)' : 'transparent',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    {item.name}
-                  </Link>
-                </motion.div>
-              );
-            })}
+                  {item.label}
+                </motion.button>
+              ))}
+
+              <div className="mt-4 pt-6 border-t border-neural-300/10 flex items-center gap-4">
+                <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="text-void-200 hover:text-neural-300 transition-colors">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-void-200 hover:text-neural-300 transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+
+      {/* Scroll progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 h-[2px] bg-gradient-to-r from-neural-300 to-plasma-500 z-[60] origin-left"
+        style={{ scaleX: 0 }}
+        id="scroll-progress"
+      />
+    </>
   );
 };
 
+export default Navbar;

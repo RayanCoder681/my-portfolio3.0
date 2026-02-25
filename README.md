@@ -1,73 +1,123 @@
-# React + TypeScript + Vite
+# 🧠 ML/DS Portfolio — Alex Chen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un portfolio moderne orienté **Machine Learning, Deep Learning & Data Science**, construit avec React + TypeScript + TailwindCSS + DaisyUI + Framer Motion.
 
-Currently, two official plugins are available:
+## 🎨 Design
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Esthétique** : Dark Tech / Neural Network  
+**Palette** : 
+- Primary: `#00EFFF` (Neural Cyan)
+- Accent: `#FF5A0A` (Plasma Orange)  
+- Background: `#080E17` (Deep Void)
+- Purple accents: `#7C3AED`
 
-## React Compiler
+**Fonts** :
+- Display: `Syne` (headings)
+- Mono: `JetBrains Mono` (code/labels)
+- Body: `Outfit` (text)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Stack
 
-## Expanding the ESLint configuration
+| Technologie | Usage |
+|-------------|-------|
+| React 18 + TypeScript | UI Framework |
+| Vite | Build tool |
+| TailwindCSS 3 | Styling |
+| DaisyUI 4 | UI Components (custom `neuraldark` theme) |
+| Framer Motion | Animations |
+| React Router DOM 6 | Routing |
+| Lucide React | Icons |
+| react-intersection-observer | Scroll animations |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/
+│   ├── NeuralBackground.tsx  ← Canvas neural network animation
+│   ├── CustomCursor.tsx      ← Custom cursor effet
+│   ├── ScrollProgress.tsx    ← Progress bar scroll
+│   ├── Navbar.tsx            ← Navigation responsive
+│   ├── Hero.tsx              ← Section hero avec typing effect
+│   ├── About.tsx             ← À propos + éducation
+│   ├── Skills.tsx            ← Skills avec barres animées
+│   ├── Projects.tsx          ← Grid projets avec filtres
+│   ├── Experience.tsx        ← Timeline expériences
+│   ├── Publications.tsx      ← Publications recherche
+│   ├── Contact.tsx           ← Formulaire + réseaux
+│   └── Footer.tsx            
+├── pages/
+│   ├── Home.tsx              ← Page principale
+│   └── NotFound.tsx          ← Page 404
+├── data/
+│   └── index.ts              ← Données du portfolio
+├── types/
+│   └── index.ts              ← Types TypeScript
+├── utils/
+│   └── animations.ts         ← Variants Framer Motion
+├── hooks/
+│   └── useInView.ts          ← Hooks personnalisés
+└── styles/
+    └── globals.css           ← CSS global + animations
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Cloner ou décompresser le projet
+cd portfolio-ml
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm run dev
+
+# Build de production
+npm run build
 ```
+
+## ✏️ Personalisation
+
+### 1. Modifier vos infos personnelles
+Éditez `src/data/index.ts` → `personalInfo`
+
+### 2. Ajouter des projets
+Éditez `src/data/index.ts` → tableau `projects`
+
+### 3. Mettre à jour l'expérience
+Éditez `src/data/index.ts` → tableau `experiences`
+
+### 4. Ajouter des publications
+Éditez `src/data/index.ts` → tableau `publications`
+
+### 5. Modifier la palette de couleurs
+Éditez `tailwind.config.ts` → sections `colors` et `daisyui.themes`
+
+## 🔧 Sections
+
+| Section | Description |
+|---------|-------------|
+| **Hero** | Intro avec typing animation, code snippet animé, stats |
+| **About** | Bio, éducation, certifications, intérêts |
+| **Skills** | Catégories de compétences avec barres de progression |
+| **Projects** | Grid avec filtres par catégorie (NLP, CV, MLOps...) |
+| **Experience** | Timeline interactive avec détails |
+| **Publications** | Liste de papers avec venue, citations, liens |
+| **Contact** | Formulaire + liens sociaux |
+
+## 🎭 Fonctionnalités
+
+- ✅ Curseur personnalisé
+- ✅ Canvas neural network animé en background
+- ✅ Scroll progress bar
+- ✅ Typing animation dans le Hero
+- ✅ Animations Framer Motion sur scroll
+- ✅ Filtres projets par catégorie
+- ✅ Timeline expérience interactive
+- ✅ Formulaire de contact avec états
+- ✅ Design responsive mobile-first
+- ✅ Thème DaisyUI personnalisé `neuraldark`
+- ✅ Custom scrollbar
+- ✅ Scanlines effect sur terminal
+- ✅ Grid overlay neural
