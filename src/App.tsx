@@ -37,6 +37,7 @@ function App() {
 
         <Footer />
       </div>
+      <Analytics />
     </BrowserRouter>
   );
 }

@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { ExternalLink, Quote, BookOpen, Award } from 'lucide-react';
+import { /* ExternalLink, */ Quote, BookOpen, Award } from 'lucide-react';
 import { publications } from '../data';
-import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
+import { fadeInUp, staggerContainer /* , itemVariants */ } from '../utils/animations';
 
+/* 
 const typeConfig: Record<string, { label: string; color: string }> = {
   journal: { label: 'Journal', color: 'text-neural-300 border-neural-300/40 bg-neural-300/10' },
   conference: { label: 'Conference', color: 'text-plasma-400 border-plasma-400/40 bg-plasma-500/10' },
   preprint: { label: 'Preprint', color: 'text-violet-300 border-violet-400/40 bg-violet-400/10' },
   workshop: { label: 'Workshop', color: 'text-green-300 border-green-400/40 bg-green-400/10' },
 };
+*/
 
 const Publications = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });

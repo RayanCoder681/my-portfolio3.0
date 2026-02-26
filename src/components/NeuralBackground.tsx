@@ -32,7 +32,7 @@ const NeuralBackground = () => {
 
     const initNodes = () => {
       const count = Math.floor((canvas.width * canvas.height) / 18000);
-      nodes = Array.from({ length: count }, (_, i) => ({
+      nodes = Array.from({ length: count }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.4,
