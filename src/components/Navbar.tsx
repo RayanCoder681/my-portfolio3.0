@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Brain, Github, Linkedin, FileText } from 'lucide-react';
 import { personalInfo } from '../data';
 
 const navItems = [
-  { label: '01.about', href: '#about' },
-  { label: '02.skills', href: '#skills' },
-  { label: '03.projects', href: '#projects' },
-  { label: '04.experience', href: '#experience' },
-  { label: '05.publications', href: '#publications' },
-  { label: '06.contact', href: '#contact' },
+  { label: '01.about', href: '/about' },
+  { label: '02.skills', href: '/skills' },
+  { label: '03.projects', href: '/projects' },
+  { label: '04.experience', href: '/experience' },
+  { label: '05.publications', href: '/publications' },
+  { label: '06.contact', href: '/contact' },
 ];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
-  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +30,7 @@ const Navbar = () => {
       for (const section of sections.reverse()) {
         const el = document.getElementById(section);
         if (el && window.scrollY >= el.offsetTop - 100) {
-          setActiveSection(`#${section}`);
+          setActiveSection(`/${section}`);
           break;
         }
       }
@@ -42,9 +42,7 @@ const Navbar = () => {
 
   const handleNavClick = (href: string) => {
     setMenuOpen(false);
-    if (location.pathname !== '/') return;
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigate(href);
   };
 
   return (

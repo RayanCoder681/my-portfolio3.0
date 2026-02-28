@@ -31,6 +31,14 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<Home />} />
+            <Route path="/skills" element={<Home />} />
+            <Route path="/projects" element={<Home />} />
+            <Route path="/project/:id" element={<Home />} />
+            <Route path="/experience" element={<Home />} />
+            <Route path="/publications" element={<Home />} />
+            <Route path="/publication/:id" element={<Home />} />
+            <Route path="/contact" element={<Home />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>

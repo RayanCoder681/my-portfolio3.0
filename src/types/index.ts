@@ -5,7 +5,7 @@ export interface Project {
   description: string;
   longDescription: string;
   tags: string[];
-  category: 'deep-learning' | 'nlp' | 'computer-vision' | 'mlops' | 'data-science' | 'reinforcement-learning';
+  category: 'deep-learning' | 'nlp' | 'computer-vision' | 'mlops' | 'data-science' | 'reinforcement-learning' | 'machine-learning';
   metrics: { label: string; value: string }[];
   technologies: string[];
   github?: string;

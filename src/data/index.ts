@@ -132,6 +132,50 @@ export const projects: Project[] = [
     year: 2022,
   },
   {
+    id: 'linear-regression-scratch',
+    title: 'Linear Regression from Scratch',
+    subtitle: 'OLS & Gradient Descent Implementation',
+    description: 'NumPy-based implementation of Linear Regression using Ordinary Least Squares and Gradient Descent. Includes convergence analysis and real-time visualization.',
+    longDescription: `A pedagogical implementation of Linear Regression fundamentals. 
+    It features a comparative study between the closed-form solution (OLS) and the iterative optimization 
+    (Gradient Descent). The project includes automated hyperparameter tuning for the learning rate, 
+    L1/L2 regularization options, and interactive Matplotlib visualizations showing the loss landscape.`,
+    tags: ['Machine Learning', 'NumPy', 'Optimization', 'Scratch'],
+    category: 'machine-learning',
+    metrics: [
+      { label: 'MSE', value: '0.024' },
+      { label: 'R² Score', value: '0.98' },
+      { label: 'Convergence', value: '<50 epochs' },
+    ],
+    technologies: ['Python', 'NumPy', 'Pandas', 'Matplotlib', 'Calculus'],
+    github: 'https://github.com/RayanCoder681/ML_From_Scratch/tree/main/Regression',
+    image: '/images/Linear_regress.jpg',
+    featured: true,
+    year: 2026,
+  },
+  {
+    id: 'knn-from-scratch',
+    title: 'KNN from Scratch',
+    subtitle: 'K-Nearest Neighbors Algorithm',
+    description: 'A pure NumPy implementation of the K-Nearest Neighbors algorithm with support for multiple distance metrics and automated K-value optimization.',
+    longDescription: `An end-to-end implementation of the K-Nearest Neighbors (KNN) algorithm without using high-level ML libraries. 
+    Key features include supporting Euclidean, Manhattan, and Minkowski distance metrics, a built-in cross-validation 
+    module for selecting the optimal 'k', and high-performance vectorized operations using NumPy for efficient 
+    inference on large datasets. Tested on Iris and MNIST-subset datasets.`,
+    tags: ['Machine Learning', 'NumPy', 'Algorithms', 'Scratch'],
+    category: 'machine-learning',
+    metrics: [
+      { label: 'Accuracy', value: '98.2%' },
+      { label: 'K-Optimal', value: '5' },
+      { label: 'Metrics', value: 'Euclidean' },
+    ],
+    technologies: ['Python', 'NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn', 'Seaborn'],
+    github: 'https://github.com/RayanCoder681/ML_From_Scratch/tree/main/Learn_KNN',
+    image: '/images/knn.jpg',
+    featured: false,
+    year: 2026,
+  },
+  {
     id: 'multimodal-rag',
     title: 'Multimodal RAG Pipeline',
     subtitle: 'Retrieval-Augmented Generation with vision + text',

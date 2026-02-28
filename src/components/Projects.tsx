@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Github, ExternalLink, FileText, ArrowRight, TrendingUp, Cpu, Database, Eye, Brain, Zap } from 'lucide-react';
+import { Github, ExternalLink, FileText, ArrowRight, TrendingUp, Cpu, Database, Eye, Brain, Zap, X } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { projects } from '../data';
 import type { Project } from '../types';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
@@ -13,6 +14,7 @@ const categoryConfig: Record<string, { label: string; color: string; icon: React
   'mlops': { label: 'MLOps', color: 'text-orange-300 border-orange-400/40 bg-orange-400/10', icon: Cpu },
   'data-science': { label: 'Data Science', color: 'text-green-300 border-green-400/40 bg-green-400/10', icon: Database },
   'reinforcement-learning': { label: 'Reinforcement Learning', color: 'text-plasma-400 border-plasma-400/40 bg-plasma-500/10', icon: TrendingUp },
+  'machine-learning': { label: 'Machine Learning', color: 'text-cyan-300 border-cyan-400/40 bg-cyan-400/10', icon: Brain },
 };
 
 const allCategories = ['all', ...Object.keys(categoryConfig)];
@@ -26,55 +28,64 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const [hovered, setHovered] = useState(false);
   const config = categoryConfig[project.category];
   const CategoryIcon = config.icon;
+  const navigate = useNavigate();
 
   return (
     <motion.div
       variants={itemVariants}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`neural-card rounded-xl overflow-hidden flex flex-col group ${
-        project.featured ? 'col-span-1 lg:col-span-1' : ''
-      }`}
+      onClick={() => navigate(`/project/${project.id}`)}
+      className={`neural-card rounded-xl overflow-hidden flex flex-col group cursor-pointer ${project.featured ? 'col-span-1 lg:col-span-1' : ''
+        }`}
     >
       {/* Card header with visual */}
       <div className="relative h-40 overflow-hidden bg-gradient-to-br from-void-600 to-void-700">
-        {/* Abstract visualization pattern */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-20"
-          viewBox="0 0 400 160"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {Array.from({ length: 8 }, (_, i) => (
-            <motion.circle
-              key={i}
-              cx={50 + i * 50 + (index % 3) * 15}
-              cy={40 + (i % 3) * 40}
-              r={3 + i * 2}
-              fill="none"
-              stroke="#00EFFF"
-              strokeWidth="0.5"
-              animate={hovered ? {
-                r: [3 + i * 2, 5 + i * 2, 3 + i * 2],
-                opacity: [0.3, 1, 0.3],
-              } : {}}
-              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
-            />
-          ))}
-          {Array.from({ length: 6 }, (_, i) => (
-            <motion.line
-              key={`l${i}`}
-              x1={50 + i * 60}
-              y1={40 + (i % 3) * 40}
-              x2={110 + i * 60}
-              y2={80 - (i % 3) * 20}
-              stroke="#00EFFF"
-              strokeWidth="0.5"
-              opacity={0.3}
-              animate={hovered ? { opacity: [0.3, 0.7, 0.3] } : {}}
-              transition={{ duration: 2, repeat: Infinity, delay: i * 0.15 }}
-            />
-          ))}
-        </svg>
+        {/* Abstract visualization pattern or project image */}
+        {project.image && (project.image.startsWith('/') || project.image.startsWith('http')) ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500"
+          />
+        ) : (
+          <svg
+            className="absolute inset-0 w-full h-full opacity-20"
+            viewBox="0 0 400 160"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {Array.from({ length: 8 }, (_, i) => (
+              <motion.circle
+                key={i}
+                cx={50 + i * 50 + (index % 3) * 15}
+                cy={40 + (i % 3) * 40}
+                r={3 + i * 2}
+                fill="none"
+                stroke="#00EFFF"
+                strokeWidth="0.5"
+                animate={hovered ? {
+                  r: [3 + i * 2, 5 + i * 2, 3 + i * 2],
+                  opacity: [0.3, 1, 0.3],
+                } : {}}
+                transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+              />
+            ))}
+            {Array.from({ length: 6 }, (_, i) => (
+              <motion.line
+                key={`l${i}`}
+                x1={50 + i * 60}
+                y1={40 + (i % 3) * 40}
+                x2={110 + i * 60}
+                y2={80 - (i % 3) * 20}
+                stroke="#00EFFF"
+                strokeWidth="0.5"
+                opacity={0.3}
+                animate={hovered ? { opacity: [0.3, 0.7, 0.3] } : {}}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.15 }}
+              />
+            ))}
+          </svg>
+        )}
 
         {/* Category badge */}
         <div className="absolute top-3 left-3">
@@ -138,6 +149,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 text-void-200 hover:text-neural-300 transition-colors font-mono text-xs"
             >
               <Github className="w-3.5 h-3.5" /> Code
@@ -148,6 +160,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 text-void-200 hover:text-neural-300 transition-colors font-mono text-xs"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Demo
@@ -158,6 +171,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.paper}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 text-void-200 hover:text-plasma-400 transition-colors font-mono text-xs"
             >
               <FileText className="w-3.5 h-3.5" /> Paper
@@ -169,9 +183,134 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   );
 };
 
+const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
+  const config = categoryConfig[project.category];
+  const CategoryIcon = config.icon;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6"
+    >
+      <div
+        className="absolute inset-0 bg-void-950/80 backdrop-blur-md"
+        onClick={onClose}
+      />
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto neural-card rounded-2xl bg-void-800 shadow-2xl"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-full bg-void-700/50 text-void-100 hover:bg-void-600 hover:text-white transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="grid md:grid-cols-2 h-full">
+          {/* Visual Header */}
+          <div className="relative h-64 md:h-full bg-gradient-to-br from-void-700 to-void-900 overflow-hidden min-h-[300px]">
+            {project.image && (project.image.startsWith('/') || project.image.startsWith('http')) ? (
+              <img
+                src={project.image}
+                alt={project.title}
+                className="absolute inset-0 w-full h-full object-cover opacity-60"
+              />
+            ) : (
+              <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                {Array.from({ length: 40 }).map((_, i) => (
+                  <motion.circle
+                    key={i}
+                    cx={Math.random() * 400}
+                    cy={Math.random() * 400}
+                    r={Math.random() * 3 + 1}
+                    fill={i % 2 === 0 ? '#00EFFF' : '#7C3AED'}
+                    animate={{
+                      opacity: [0.1, 0.5, 0.1],
+                      scale: [1, 1.5, 1],
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Infinity,
+                    }}
+                  />
+                ))}
+              </svg>
+            )}
+            <div className="absolute inset-0 flex items-center justify-center p-12">
+              <div className="text-center">
+                <CategoryIcon className="w-20 h-20 text-neural-300 mx-auto mb-6 opacity-50" />
+                <span className={`px-3 py-1 rounded-full text-xs font-mono border ${config.color}`}>
+                  {config.label}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="p-8 md:p-12 overflow-y-auto">
+            <div className="font-mono text-xs text-plasma-400 mb-2">{project.year} · {project.subtitle}</div>
+            <h2 className="font-display text-3xl font-bold text-white mb-6 underline decoration-neural-300/30 underline-offset-8">
+              {project.title}
+            </h2>
+
+            <p className="text-void-100 leading-relaxed mb-8 whitespace-pre-line">
+              {project.longDescription || project.description}
+            </p>
+
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              {project.metrics.map(m => (
+                <div key={m.label} className="p-3 bg-void-700/30 rounded-lg border border-void-400/10">
+                  <div className="font-display font-bold text-lg text-neural-300">{m.value}</div>
+                  <div className="font-mono text-[10px] text-void-300 uppercase tracking-tighter">{m.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-8">
+              <h4 className="font-mono text-xs text-void-400 uppercase tracking-widest mb-3">Technologies</h4>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map(t => (
+                  <span key={t} className="px-3 py-1 rounded-md text-xs font-mono bg-void-700 text-void-100 border border-void-400/20">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6 pt-6 border-t border-void-400/10">
+              {project.github && (
+                <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-void-100 hover:text-neural-300 transition-colors font-mono text-sm group">
+                  <Github className="w-5 h-5" />
+                  <span className="border-b border-transparent group-hover:border-neural-300">Repository</span>
+                </a>
+              )}
+              {project.demo && (
+                <a href={project.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-void-100 hover:text-neural-300 transition-colors font-mono text-sm group">
+                  <ExternalLink className="w-5 h-5" />
+                  <span className="border-b border-transparent group-hover:border-neural-300">Live Demo</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const Projects = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+
+  const selectedProject = id ? projects.find(p => p.id === id) : null;
 
   const filtered = activeFilter === 'all'
     ? projects
@@ -209,12 +348,14 @@ const Projects = () => {
           {allCategories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setActiveFilter(cat)}
-              className={`px-4 py-1.5 rounded-full font-mono text-xs border transition-all ${
-                activeFilter === cat
-                  ? 'bg-neural-300/15 border-neural-300/50 text-neural-300'
-                  : 'border-void-300/20 text-void-200 hover:border-void-300/40 hover:text-void-100'
-              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveFilter(cat);
+              }}
+              className={`px-4 py-1.5 rounded-full font-mono text-xs border transition-all ${activeFilter === cat
+                ? 'bg-neural-300/15 border-neural-300/50 text-neural-300'
+                : 'border-void-300/20 text-void-200 hover:border-void-300/40 hover:text-void-100'
+                }`}
             >
               {cat === 'all' ? 'All Projects' : categoryConfig[cat]?.label || cat}
               {cat !== 'all' && (
@@ -250,7 +391,7 @@ const Projects = () => {
           className="mt-12 text-center"
         >
           <a
-            href="https://github.com"
+            href="https://github.com/RayanCoder681"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 btn-neural px-6 py-3 rounded group"
@@ -261,6 +402,16 @@ const Projects = () => {
           </a>
         </motion.div>
       </div>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => navigate('/projects')}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };
