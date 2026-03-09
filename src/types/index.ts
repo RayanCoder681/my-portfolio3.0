@@ -48,8 +48,9 @@ export interface Publication {
   authors: string[];
   venue: string;
   year: number;
-  type: 'journal' | 'conference' | 'preprint' | 'workshop';
+  type: 'journal' | 'conference' | 'preprint' | 'workshop' | 'article';
   abstract: string;
+  content?: string;
   doi?: string;
   arxiv?: string;
   citations?: number;

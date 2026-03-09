@@ -5,12 +5,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { publications } from '../data';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
 import type { Publication } from '../types';
+import ReactMarkdown from 'react-markdown';
 
 const typeConfig: Record<string, { label: string; color: string }> = {
   journal: { label: 'Journal', color: 'text-neural-300 border-neural-300/40 bg-neural-300/10' },
   conference: { label: 'Conference', color: 'text-plasma-400 border-plasma-400/40 bg-plasma-500/10' },
   preprint: { label: 'Preprint', color: 'text-violet-300 border-violet-400/40 bg-violet-400/10' },
   workshop: { label: 'Workshop', color: 'text-green-300 border-green-400/40 bg-green-400/10' },
+  article: { label: 'Article', color: 'text-amber-300 border-amber-400/40 bg-amber-400/10' },
 };
 
 const PublicationModal = ({ pub, onClose }: { pub: Publication; onClose: () => void }) => {
@@ -87,6 +89,15 @@ const PublicationModal = ({ pub, onClose }: { pub: Publication; onClose: () => v
             "{pub.abstract}"
           </p>
         </div>
+
+        {pub.content && (
+          <div className="mb-8 border-t border-void-400/20 pt-8">
+            <h4 className="font-mono text-xs text-void-400 uppercase tracking-widest mb-4">Full Article</h4>
+            <div className="prose prose-invert prose-sm max-w-none text-void-100 placeholder-prose prose-pre:bg-void-900 prose-pre:border prose-pre:border-void-400/20">
+              <ReactMarkdown>{pub.content}</ReactMarkdown>
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-2 mb-8">
           {pub.tags.map((tag) => (
