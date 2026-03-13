@@ -1,3 +1,6 @@
+import typography from '@tailwindcss/typography';
+import daisyui from 'daisyui';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -13,7 +16,7 @@ export default {
       },
       colors: {
         neural: {
-          50:  '#e8ffff',
+          50: '#e8ffff',
           100: '#c0fdff',
           200: '#80f9ff',
           300: '#00EFFF',
@@ -31,7 +34,7 @@ export default {
           600: '#E04500',
         },
         void: {
-          50:  '#E8EDF2',
+          50: '#E8EDF2',
           100: '#C8D2DC',
           200: '#8A9BB0',
           300: '#546478',
@@ -87,10 +90,82 @@ export default {
       },
       backdropBlur: {
         xs: '2px',
-      }
+      },
+      typography: (theme: any) => ({
+        DEFAULT: {
+          css: {
+            color: theme('colors.void.100'),
+            lineHeight: '1.8',
+            fontSize: '1.05rem',
+            'h1, h2, h3, h4': {
+              color: theme('colors.white'),
+              fontFamily: theme('fontFamily.display'),
+              fontWeight: '700',
+              letterSpacing: '-0.02em',
+            },
+            a: {
+              color: theme('colors.neural.300'),
+              textDecoration: 'none',
+              borderBottom: `1px solid ${theme('colors.neural.300')}33`,
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                color: theme('colors.white'),
+                borderBottomColor: theme('colors.white'),
+              },
+            },
+            strong: {
+              color: theme('colors.white'),
+              fontWeight: '600',
+            },
+            code: {
+              color: theme('colors.plasma.300'),
+              backgroundColor: theme('colors.void.900'),
+              padding: '0.2rem 0.4rem',
+              borderRadius: '0.25rem',
+              fontWeight: '400',
+            },
+            'code::before': { content: 'none' },
+            'code::after': { content: 'none' },
+            pre: {
+              backgroundColor: theme('colors.void.900'),
+              border: `1px solid ${theme('colors.void.400')}33`,
+              borderRadius: '0.75rem',
+              padding: '1.5rem',
+            },
+            blockquote: {
+              borderLeftColor: theme('colors.neural.300'),
+              backgroundColor: `${theme('colors.neural.300')}08`,
+              fontStyle: 'italic',
+              padding: '1rem 1.5rem',
+              borderRadius: '0 0.5rem 0.5rem 0',
+              color: theme('colors.void.200'),
+            },
+            ul: {
+              listStyleType: 'none',
+              paddingLeft: '0',
+            },
+            'ul > li': {
+              position: 'relative',
+              paddingLeft: '1.75rem',
+            },
+            'ul > li::before': {
+              content: '""',
+              position: 'absolute',
+              left: '0.5rem',
+              top: '0.75rem',
+              width: '0.5rem',
+              height: '1px',
+              backgroundColor: theme('colors.neural.300'),
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    typography,
+    daisyui
+  ],
   daisyui: {
     themes: [
       {

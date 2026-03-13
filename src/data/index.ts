@@ -175,6 +175,25 @@ export const projects: Project[] = [
     featured: false,
     year: 2026,
   },
+  {
+    id: 'logistic-regression-scratch',
+    title: 'Logistic Regression from Scratch',
+    subtitle: 'Gradient Descent Implementation',
+    description: 'A pure NumPy implementation of Logistic Regression for binary classification. Developed as part of a deep dive into fundamental ML optimization.',
+    longDescription: `An end-to-end implementation of Logistic Regression using NumPy. It features a robust gradient descent optimizer, Z-score normalization, and a comprehensive evaluation suite including accuracy, precision, recall, and F1-score. Created a synthetic dataset of university admissions to validate the model, achieving 83% accuracy and providing clear weight interpretability.`,
+    tags: ['Machine Learning', 'NumPy', 'Optimization', 'Scratch'],
+    category: 'machine-learning',
+    metrics: [
+      { label: 'Accuracy', value: '83%' },
+      { label: 'F1-Score', value: '0.84' },
+      { label: 'Convergence', value: '1000 epochs' },
+    ],
+    technologies: ['Python', 'NumPy', 'Pandas', 'Matplotlib'],
+    github: 'https://github.com/RayanCoder681/ML_From_Scratch/tree/main/Regression%20Logistic',
+    image: '/images/logistic_regression.jpg',
+    featured: true,
+    year: 2026,
+  },
   // {
   //   id: 'multimodal-rag',
   //   title: 'Multimodal RAG Pipeline',
@@ -339,17 +358,82 @@ export const experiences: Experience[] = [
 ];
 
 export const publications: Publication[] = [
+  // {
+  //   id: 'pub1',
+  //   title: 'Efficient Long-Context Transformers via Hierarchical Sparse Attention',
+  //   authors: ['Alex Chen', 'Maria Santos', 'Yuki Tanaka', 'David Kim'],
+  //   venue: 'NeurIPS 2023',
+  //   year: 2023,
+  //   type: 'conference',
+  //   abstract: 'We propose HierSparse, a hierarchical sparse attention mechanism that reduces the computational complexity of self-attention from O(n²) to O(n log n) while maintaining full expressiveness for long-context tasks. Evaluated across 7 benchmarks, HierSparse matches full attention performance with 4× speed improvement at 16k context length.',
+  //   arxiv: 'https://arxiv.org/abs/2312.xxxxx',
+  //   citations: 127,
+  //   tags: ['Transformers', 'Attention', 'Efficiency', 'LLM'],
+  // },
   {
-    id: 'pub1',
-    title: 'Efficient Long-Context Transformers via Hierarchical Sparse Attention',
-    authors: ['Alex Chen', 'Maria Santos', 'Yuki Tanaka', 'David Kim'],
-    venue: 'NeurIPS 2023',
-    year: 2023,
-    type: 'conference',
-    abstract: 'We propose HierSparse, a hierarchical sparse attention mechanism that reduces the computational complexity of self-attention from O(n²) to O(n log n) while maintaining full expressiveness for long-context tasks. Evaluated across 7 benchmarks, HierSparse matches full attention performance with 4× speed improvement at 16k context length.',
-    arxiv: 'https://arxiv.org/abs/2312.xxxxx',
-    citations: 127,
-    tags: ['Transformers', 'Attention', 'Efficiency', 'LLM'],
+    id: 'data-leakage-preprocessing',
+    title: 'Le Piège Silencieux du Machine Learning : Éviter le "Data Leakage" lors du Prétraitement',
+    authors: ['Rayan Diatsa'],
+    venue: 'ML Blog',
+    year: 2026,
+    type: 'article',
+    abstract: 'Exploration de l\'erreur subtile du data leakage en prétraitement, avec des exemples concrets tirés d\'une implémentation de régression logistique from scratch.',
+    content: `
+# Le Piège Silencieux du Machine Learning : Éviter le "Data Leakage" lors du Prétraitement
+
+**Introduction**
+Imaginez la situation : vous venez de terminer la modélisation de votre jeu de données. Vos métriques d'évaluation sont exceptionnelles, votre modèle affiche une précision (*accuracy*) de 98%. Vous le déployez en production, confiant... et c'est la catastrophe. Les prédictions sur les nouvelles données sont très mauvaises.
+
+Que s'est-il passé ? Vous avez probablement été victime de **Data Leakage** (ou fuite de données). Dans cet article, nous allons explorer comment cette erreur subtile s'immisce dans une phase apparemment inoffensive : le prétraitement des données (*preprocessing*).
+
+### Qu'est-ce que le Data Leakage en Prétraitement ?
+Le principe fondamental du Machine Learning est que le jeu de test (\`Test Set\`) doit simuler des données futures, totalement inconnues du modèle. Le Data Leakage se produit lorsque des éléments ou la structure mathématique de ce jeu de test "fuitent" dans le jeu d'entraînement (\`Train Set\`) pendant le développement du modèle.
+
+L'une des façons les plus courantes — et les plus vicieuses — de créer une telle fuite, est d'appliquer des transformations statistiques (comme la normalisation, la standardisation, ou l'imputation de valeurs manquantes) sur *l'ensemble* du jeu de données, **avant** de procéder à la séparation Train/Test.
+
+### L'Erreur Classique (Ce qu'il ne faut pas faire) ❌
+Prenons l'exemple de la standardisation (*Z-score normalization*), que j'ai eu l'occasion de coder de zéro dans un récent projet de Régression Logistique. La formule implique de soustraire la moyenne globale de la variable, puis de la diviser par son écart-type.
+
+Voici l'approche erronée que l'on observe souvent :
+\`\`\`python
+# ❌ L'ERREUR CLASSIQUE : Normaliser AVANT de séparer
+# La moyenne et l'écart-type sont calculés sur CHAQUE ligne, y compris les futures données de test !
+X_normalized = (X - X.mean()) / X.std()
+
+# Le modèle va s'entraîner sur des données qui "connaissent" déjà les statistiques globales...
+X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.2)
+\`\`\`
+**Pourquoi est-ce mauvais ?** Parce que la moyenne (et l'écart-type) que vous avez utilisée pour transformer votre \`X_train\` a été influencée par les valeurs de votre \`X_test\`. Votre modèle a secrètement "vu" une information mathématique sur les données de test à l'avance. Son évaluation sera alors facticement optimiste.
+
+### La Bonne Pratique : Respecter la Chronologie des Données ✅
+La règle d'or en Data Science est stricte : **Séparer d'abord, Transformer ensuite.**
+
+Les paramètres de prétraitement (la moyenne \`mean\` et l'écart-type \`std\`) doivent être "appris" **uniquement** sur les données d'entraînement. Ces mêmes paramètres sont ensuite appliqués aux données d'entraînement ET aux données de test.
+
+Voici la bonne approche, tirée de l'implémentation *From Scratch* de mon algorithme :
+
+\`\`\`python
+# ✅ LA BONNE PRATIQUE : Séparer d'abord
+# 1. On sépare les données D'ABORD
+X_train, X_test, y_train, y_test = train_test_split_manual(X, y, test_size=0.2)
+
+# 2. On calcule les paramètres UNIQUEMENT sur X_train
+mean_train = np.mean(X_train, axis=0)
+std_train = np.std(X_train, axis=0)
+
+# 3. On applique la transformation au Train ET au Test, en utilisant UNIQUEMENT mean_train et std_train
+X_train_norm = (X_train - mean_train) / std_train
+X_test_norm = (X_test - mean_train) / std_train 
+\`\`\`
+
+Même si le \`X_test\` a sa propre moyenne mathématique dans l'absolu, nous l'ignorons volontairement. Nous le traitons exactement de la même manière qu'une nouvelle donnée isolée (un étudiant candidat) arrivant dans l'algorithme une fois en production. 
+
+### Conclusion
+Dans un pipeline de Machine Learning, l'hygiène de la donnée est tout aussi vitale que le choix de l'algorithme. Gérer le prétraitement après la séparation de vos données garantit que vos métriques d'évaluation reflètent la performance réelle de votre modèle face à la réalité.
+
+Avoir conscience de l'étanchéité absolue qui doit exister entre votre Train et votre Test n'est pas qu'un détail d'implémentation, c'est la marque d'une véritable maturité scientifique en Data Science. 
+`,
+    tags: ['Machine Learning', 'Data Science', 'Preprocessing', 'Data Leakage', 'Python'],
   },
   // {
   //   id: 'pub2',
