@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { ExternalLink, Quote, BookOpen, Award, X, FileText, Calendar, Users, MapPin } from 'lucide-react';
+import { ExternalLink, Quote, BookOpen, Award, X, FileText, Users, MapPin } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { publications } from '../data';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
