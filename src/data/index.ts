@@ -358,43 +358,33 @@ export const experiences: Experience[] = [
 ];
 
 export const publications: Publication[] = [
-  // {
-  //   id: 'pub1',
-  //   title: 'Efficient Long-Context Transformers via Hierarchical Sparse Attention',
-  //   authors: ['Alex Chen', 'Maria Santos', 'Yuki Tanaka', 'David Kim'],
-  //   venue: 'NeurIPS 2023',
-  //   year: 2023,
-  //   type: 'conference',
-  //   abstract: 'We propose HierSparse, a hierarchical sparse attention mechanism that reduces the computational complexity of self-attention from O(n²) to O(n log n) while maintaining full expressiveness for long-context tasks. Evaluated across 7 benchmarks, HierSparse matches full attention performance with 4× speed improvement at 16k context length.',
-  //   arxiv: 'https://arxiv.org/abs/2312.xxxxx',
-  //   citations: 127,
-  //   tags: ['Transformers', 'Attention', 'Efficiency', 'LLM'],
-  // },
   {
     id: 'data-leakage-preprocessing',
     title: 'Le Piège Silencieux du Machine Learning : Éviter le "Data Leakage" lors du Prétraitement',
     authors: ['Rayan Diatsa'],
-    venue: 'ML Blog',
+    venue: 'Portfolio Blog',
     year: 2026,
     type: 'article',
-    abstract: 'Exploration de l\'erreur subtile du data leakage en prétraitement, avec des exemples concrets tirés d\'une implémentation de régression logistique from scratch.',
-    content: `
-# Le Piège Silencieux du Machine Learning : Éviter le "Data Leakage" lors du Prétraitement
+    abstract: 'Pourquoi un modèle affichant 98% d\'accuracy en entraînement peut-il s\'effondrer en production ? Découvrez comment une erreur subtile de normalisation peut fausser vos résultats.',
+    content: `## Introduction
+Imaginez la situation : vous venez de terminer la modélisation de votre jeu de données. Vos métriques d'évaluation sont exceptionnelles, votre modèle affiche une précision (accuracy) de 98%. Vous le déployez en production, confiant... et c'est la catastrophe. Les prédictions sur les nouvelles données sont très mauvaises.
 
-**Introduction**
-Imaginez la situation : vous venez de terminer la modélisation de votre jeu de données. Vos métriques d'évaluation sont exceptionnelles, votre modèle affiche une précision (*accuracy*) de 98%. Vous le déployez en production, confiant... et c'est la catastrophe. Les prédictions sur les nouvelles données sont très mauvaises.
+Que s'est-il passé ? Vous avez probablement été victime de **Data Leakage** (ou fuite de données). Dans cet article, nous allons explorer comment cette erreur subtile s'immisce dans une phase apparemment inoffensive : le prétraitement des données (preprocessing).
 
-Que s'est-il passé ? Vous avez probablement été victime de **Data Leakage** (ou fuite de données). Dans cet article, nous allons explorer comment cette erreur subtile s'immisce dans une phase apparemment inoffensive : le prétraitement des données (*preprocessing*).
+---
 
-### Qu'est-ce que le Data Leakage en Prétraitement ?
-Le principe fondamental du Machine Learning est que le jeu de test (\`Test Set\`) doit simuler des données futures, totalement inconnues du modèle. Le Data Leakage se produit lorsque des éléments ou la structure mathématique de ce jeu de test "fuitent" dans le jeu d'entraînement (\`Train Set\`) pendant le développement du modèle.
+## Qu'est-ce que le Data Leakage en Prétraitement ?
+Le principe fondamental du Machine Learning est que le jeu de test (Test Set) doit simuler des données futures, totalement inconnues du modèle. Le Data Leakage se produit lorsque des éléments ou la structure mathématique de ce jeu de test "fuitent" dans le jeu d'entraînement (Train Set) pendant le développement du modèle.
 
-L'une des façons les plus courantes — et les plus vicieuses — de créer une telle fuite, est d'appliquer des transformations statistiques (comme la normalisation, la standardisation, ou l'imputation de valeurs manquantes) sur *l'ensemble* du jeu de données, **avant** de procéder à la séparation Train/Test.
+L'une des façons les plus courantes — et les plus vicieuses — de créer une telle fuite, est d'appliquer des transformations statistiques (comme la normalisation, la standardisation, ou l'imputation de valeurs manquantes) sur l'ensemble du jeu de données, **avant** de procéder à la séparation Train/Test.
 
-### L'Erreur Classique (Ce qu'il ne faut pas faire) ❌
-Prenons l'exemple de la standardisation (*Z-score normalization*), que j'ai eu l'occasion de coder de zéro dans un récent projet de Régression Logistique. La formule implique de soustraire la moyenne globale de la variable, puis de la diviser par son écart-type.
+---
+
+## L'Erreur Classique (Ce qu'il ne faut pas faire) ❌
+Prenons l'exemple de la standardisation (Z-score normalization), que j'ai eu l'occasion de coder de zéro dans un récent projet de Régression Logistique. La formule implique de soustraire la moyenne globale de la variable, puis de la diviser par son écart-type.
 
 Voici l'approche erronée que l'on observe souvent :
+
 \`\`\`python
 # ❌ L'ERREUR CLASSIQUE : Normaliser AVANT de séparer
 # La moyenne et l'écart-type sont calculés sur CHAQUE ligne, y compris les futures données de test !
@@ -403,12 +393,15 @@ X_normalized = (X - X.mean()) / X.std()
 # Le modèle va s'entraîner sur des données qui "connaissent" déjà les statistiques globales...
 X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.2)
 \`\`\`
+
 **Pourquoi est-ce mauvais ?** Parce que la moyenne (et l'écart-type) que vous avez utilisée pour transformer votre \`X_train\` a été influencée par les valeurs de votre \`X_test\`. Votre modèle a secrètement "vu" une information mathématique sur les données de test à l'avance. Son évaluation sera alors facticement optimiste.
 
-### La Bonne Pratique : Respecter la Chronologie des Données ✅
+---
+
+## La Bonne Pratique : Respecter la Chronologie des Données ✅
 La règle d'or en Data Science est stricte : **Séparer d'abord, Transformer ensuite.**
 
-Les paramètres de prétraitement (la moyenne \`mean\` et l'écart-type \`std\`) doivent être "appris" **uniquement** sur les données d'entraînement. Ces mêmes paramètres sont ensuite appliqués aux données d'entraînement ET aux données de test.
+Les paramètres de prétraitement (la moyenne \`mean\` et l'écart-type \`std\`) doivent être "appris" uniquement sur les données d'entraînement. Ces mêmes paramètres sont ensuite appliqués aux données d'entraînement ET aux données de test.
 
 Voici la bonne approche, tirée de l'implémentation *From Scratch* de mon algorithme :
 
@@ -423,18 +416,33 @@ std_train = np.std(X_train, axis=0)
 
 # 3. On applique la transformation au Train ET au Test, en utilisant UNIQUEMENT mean_train et std_train
 X_train_norm = (X_train - mean_train) / std_train
-X_test_norm = (X_test - mean_train) / std_train 
+X_test_norm = (X_test - mean_train) / std_train
 \`\`\`
 
-Même si le \`X_test\` a sa propre moyenne mathématique dans l'absolu, nous l'ignorons volontairement. Nous le traitons exactement de la même manière qu'une nouvelle donnée isolée (un étudiant candidat) arrivant dans l'algorithme une fois en production. 
+Même si le \`X_test\` a sa propre moyenne mathématique dans l'absolu, nous l'ignorons volontairement. Nous le traitons exactement de la même manière qu'une nouvelle donnée isolée arrivant dans l'algorithme une fois en production.
 
-### Conclusion
-Dans un pipeline de Machine Learning, l'hygiène de la donnée est tout aussi vitale que le choix de l'algorithme. Gérer le prétraitement après la séparation de vos données garantit que vos métriques d'évaluation reflètent la performance réelle de votre modèle face à la réalité.
+---
 
-Avoir conscience de l'étanchéité absolue qui doit exister entre votre Train et votre Test n'est pas qu'un détail d'implémentation, c'est la marque d'une véritable maturité scientifique en Data Science. 
-`,
-    tags: ['Machine Learning', 'Data Science', 'Preprocessing', 'Data Leakage', 'Python'],
+## Conclusion
+Dans un pipeline de Machine Learning, l'hygiène de la donnée est tout aussi vitale que le choix de l'algorithme. Gérer le prétraitement après la séparation de vos données garantit que vos métriques d'évaluation reflètent la performance réalisée par votre modèle face à la réalité.
+
+Avoir conscience de l'étanchéité absolue qui doit exister entre votre Train et votre Test n'est pas qu'un détail d'implémentation, c'est la marque d'une véritable maturité scientifique en Data Science.
+
+> **Conseil bonus :** Si vous utilisez scikit-learn, le module \`Pipeline\` est conçu exactement pour éviter ce type de fuite en enchaînant les transformations proprement sur vos folds de données !`,
+    tags: ['Machine Learning', 'Data Preprocessing', 'Best Practices', 'Python'],
   },
+  // {
+  //   id: 'pub1',
+  //   title: 'Efficient Long-Context Transformers via Hierarchical Sparse Attention',
+  //   authors: ['Alex Chen', 'Maria Santos', 'Yuki Tanaka', 'David Kim'],
+  //   venue: 'NeurIPS 2023',
+  //   year: 2023,
+  //   type: 'conference',
+  //   abstract: 'We propose HierSparse, a hierarchical sparse attention mechanism that reduces the computational complexity of self-attention from O(n²) to O(n log n) while maintaining full expressiveness for long-context tasks. Evaluated across 7 benchmarks, HierSparse matches full attention performance with 4× speed improvement at 16k context length.',
+  //   arxiv: 'https://arxiv.org/abs/2312.xxxxx',
+  //   citations: 127,
+  //   tags: ['Transformers', 'Attention', 'Efficiency', 'LLM'],
+  // },
   // {
   //   id: 'pub2',
   //   title: 'MedViT-3D: Vision Transformers for Volumetric Medical Image Segmentation',
@@ -471,5 +479,78 @@ Avoir conscience de l'étanchéité absolue qui doit exister entre votre Train e
   //   arxiv: 'https://arxiv.org/abs/2209.xxxxx',
   //   citations: 61,
   //   tags: ['GNN', 'RecSys', 'Graph ML', 'Deep Learning'],
-  // },
+  {
+    id: 'encoding-paradigms-categorical-data',
+    title: 'Encoding Paradigms: Label vs One-Hot — Choisir la Bonne Représentation pour vos Données Catégorielles',
+    authors: ['Rayan Diatsa'],
+    venue: 'ML Blog',
+    year: 2026,
+    type: 'article',
+    abstract: 'Une exploration profonde des méthodes d\'encodage des variables catégorielles. Comprendre quand utiliser le Label Encoding pour les données ordinales et le One-Hot Encoding pour les données nominales, tout en évitant les pièges de la multicolinéarité et de la dimensionnalité.',
+    content: `
+# Encoding Paradigms: Label vs One-Hot — Choisir la Bonne Représentation pour vos Données Catégorielles
+
+### Introduction
+Les algorithmes de Machine Learning sont des moteurs mathématiques. Ils ne comprennent pas le texte, les couleurs ou les catégories sociales ; ils ne comprennent que les nombres. Pourtant, le monde réel est rempli de données non numériques. Comment transformer un "Rouge", "Vert", "Bleu" en quelque chose qu'un modèle peut digérer sans introduire de biais mathématiques ? C'est le rôle de l'**Encoding**.
+
+Dans cet article, nous allons décortiquer les deux paradigmes les plus fondamentaux : le **Label Encoding** et le **One-Hot Encoding**.
+
+---
+
+### 1. Label Encoding : L'Ordre Compte
+Le Label Encoding consiste à assigner un entier unique à chaque catégorie. Par exemple : \`[Petit, Moyen, Grand]\` devient \`[0, 1, 2]\`.
+
+**Quand l'utiliser ?**
+Uniquement pour les données **ordinales**, c'est-à-dire là où il existe un ordre logique ou une hiérarchie. L'algorithme pourra interpréter que \`2 > 1\`, ce qui fait sens pour une taille ou un niveau d'étude.
+
+**Le Risque : La Hiérarchie Fantôme 👻**
+Si vous appliquez le Label Encoding à des données **nominales** (ex: pays de naissance : France=0, Canada=1, Japon=2), le modèle croira que le Japon est "plus grand" ou "plus important" que la France. Cela crée un biais mathématique qui n'existe pas dans la réalité.
+
+---
+
+### 2. One-Hot Encoding : L'Égalité par la Dimension
+Le One-Hot Encoding crée une nouvelle colonne pour chaque catégorie. Chaque colonne contient un \`1\` si la donnée appartient à la catégorie, et \`0\` sinon.
+
+**Quand l'utiliser ?**
+Pour les données **nominales** sans ordre intrinsèque. Chaque catégorie est traitée sur un pied d'égalité mathématique.
+
+**Le Piège : La Multicolinéarité (Dummy Variable Trap) 🪤**
+Si vous avez deux catégories (Homme/Femme), créer deux colonnes est redondant. Si \`Homme=0\`, alors \`Femme\` est forcément \`1\`. Cette dépendance linéaire peut perturber certains modèles comme la Régression Linéaire ou Logistique.
+
+*Solution :* En utilisant \`drop_first=True\` dans pandas, vous supprimez une colonne redondante.
+
+---
+
+### Implémentation Pratique (Python)
+
+Voici comment gérer ces paradigmes avec élégance :
+
+\`\`\`python
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+# Dataset d'exemple
+data = {
+    'Taille': ['Petit', 'Grand', 'Moyen', 'Petit'], # Ordinal
+    'Couleur': ['Rouge', 'Bleu', 'Vert', 'Rouge']   # Nominal
+}
+df = pd.DataFrame(data)
+
+# 1. Label Encoding pour 'Taille'
+# Note: Idéalement, utilisez un mapping manuel pour contrôler l'ordre
+mapping = {'Petit': 0, 'Moyen': 1, 'Grand': 2}
+df['Taille_Encoded'] = df['Taille'].map(mapping)
+
+# 2. One-Hot Encoding pour 'Couleur'
+df_ohe = pd.get_dummies(df['Couleur'], prefix='Color', drop_first=True)
+df = pd.concat([df, df_ohe], axis=1)
+
+print(df.drop(['Taille', 'Couleur'], axis=1))
+\`\`\`
+
+### Conclusion
+L'encodage n'est pas qu'une simple étape technique de formatage. C'est un choix de design qui définit comment votre modèle perçoit les relations entre les données. Un mauvais choix d'encoding peut transformer un excellent dataset en un modèle biaisé ou inefficace.
+`,
+    tags: ['Machine Learning', 'Data Preprocessing', 'Categorical Data', 'Python'],
+  },
 ];

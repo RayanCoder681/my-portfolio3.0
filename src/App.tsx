@@ -4,7 +4,6 @@ import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NeuralBackground from './components/NeuralBackground';
-import CustomCursor from './components/CustomCursor';
 import ScrollProgress from './components/ScrollProgress';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
@@ -14,9 +13,6 @@ function App() {
     <BrowserRouter>
       {/* Neural canvas background */}
       <NeuralBackground />
-
-      {/* Custom cursor */}
-      <CustomCursor />
 
       {/* Scroll progress */}
       <ScrollProgress />
