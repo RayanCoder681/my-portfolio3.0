@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, BookOpen, ExternalLink, Terminal, RefreshCw } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, ExternalLink, Terminal, RefreshCw } from 'lucide-react';
 import { usePortfolioData } from '../hooks/usePortfolioData';
 import { staggerContainer, fadeInUp } from '../utils/animations';
 import { useTrack } from '../context/TrackContext';
@@ -14,7 +14,7 @@ const roles = [
   'Junior AI Systems Builder',
 ];
 
-const codeSnippet = `# Building intelligence, one tensor at a time
+const aiCodeSnippet = `# Building intelligence, one tensor at a time
 import torch
 import torch.nn as nn
 
@@ -33,9 +33,29 @@ class NeuralPortfolio(nn.Module):
             passion=self.passion
         )`;
 
+const webCodeSnippet = `// Crafting engaging digital experiences
+import React, { useState } from 'react';
+
+const WebPortfolio = () => {
+    const [expertise] = useState([
+        "React & TypeScript",
+        "TailwindCSS Magic",
+        "Node.js / HonoJS",
+        "PostgreSQL"
+    ]);
+    
+    return (
+        <main className="portfolio">
+            <h1>Pixel Perfect UI</h1>
+            <p>Building logic that scales</p>
+        </main>
+    );
+};`;
+
 const Hero = () => {
   const { track, setTrack } = useTrack();
   const isWeb = track === 'web';
+  const displayCodeSnippet = isWeb ? webCodeSnippet : aiCodeSnippet;
   const { personalInfo, stats } = usePortfolioData();
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
@@ -247,13 +267,13 @@ const Hero = () => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
                   <div className="w-3 h-3 rounded-full bg-green-500/70" />
                 </div>
-                <span className="font-mono text-xs text-void-200 ml-2">portfolio.py</span>
+                <span className="font-mono text-xs text-void-200 ml-2">{isWeb ? 'portfolio.tsx' : 'portfolio.py'}</span>
               </div>
 
               {/* Code content */}
               <div className="p-6">
                 <pre className="font-mono text-sm leading-relaxed overflow-x-auto">
-                  {codeSnippet.split('\n').map((line, i) => (
+                  {displayCodeSnippet.split('\n').map((line, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, x: -10 }}
@@ -265,10 +285,10 @@ const Hero = () => {
                         {i + 1}
                       </span>
                       <span className={
-                        line.startsWith('#') ? 'text-void-200 italic' :
-                          line.includes('class ') || line.includes('def ') || line.includes('import ') ? 'text-plasma-400' :
-                            line.includes('"') || line.includes("'") ? 'text-green-400' :
-                              line.includes('self.') ? 'text-neural-300' :
+                        (line.trim().startsWith('#') || line.trim().startsWith('//')) ? 'text-void-200 italic' :
+                          (line.includes('class ') || line.includes('def ') || line.includes('import ') || line.includes('const ') || line.includes('return')) ? 'text-plasma-400' :
+                            (line.includes('self.') || line.includes('useState') || line.includes('<') || line.includes('>')) ? 'text-neural-300' :
+                              (line.includes('"') || line.includes("'")) ? 'text-green-400' :
                                 'text-void-100'
                       }>
                         {line}
