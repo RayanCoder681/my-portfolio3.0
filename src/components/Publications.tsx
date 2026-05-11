@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ExternalLink, Quote, BookOpen, Award, X, FileText, Users, MapPin } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { publications } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -174,6 +174,7 @@ const Publications = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const { publications } = usePortfolioData();
 
   const selectedPub = id ? publications.find(p => p.id === id) : null;
 

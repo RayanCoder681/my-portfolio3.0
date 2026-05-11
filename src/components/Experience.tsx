@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { MapPin, Briefcase, ChevronRight } from 'lucide-react';
-import { experiences } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 
 const typeColors: Record<string, string> = {
@@ -15,6 +15,7 @@ const typeColors: Record<string, string> = {
 const Experience = () => {
   const [activeExp, setActiveExp] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const { experiences } = usePortfolioData();
 
   const current = experiences[activeExp];
 
@@ -54,19 +55,17 @@ const Experience = () => {
                 <button
                   key={exp.id}
                   onClick={() => setActiveExp(i)}
-                  className={`relative w-full text-left pl-10 pr-4 py-4 mb-2 rounded-r-lg transition-all ${
-                    activeExp === i
+                  className={`relative w-full text-left pl-10 pr-4 py-4 mb-2 rounded-r-lg transition-all ${activeExp === i
                       ? 'bg-neural-300/5 border-r-2 border-neural-300'
                       : 'hover:bg-void-600/30'
-                  }`}
+                    }`}
                 >
                   {/* Timeline dot */}
                   <div
-                    className={`absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 transition-all ${
-                      activeExp === i
+                    className={`absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 transition-all ${activeExp === i
                         ? 'bg-neural-300 border-neural-300 shadow-neural'
                         : 'bg-void-700 border-void-300/40'
-                    }`}
+                      }`}
                   />
 
                   <div className="flex items-start justify-between gap-2">
@@ -84,9 +83,8 @@ const Experience = () => {
                   <div className="flex items-center gap-3 mt-2">
                     <span className="font-mono text-xs text-void-300">{exp.period}</span>
                     <span
-                      className={`px-1.5 py-0.5 rounded text-xs font-mono border capitalize ${
-                        typeColors[exp.type] || 'text-void-200 border-void-300/20'
-                      }`}
+                      className={`px-1.5 py-0.5 rounded text-xs font-mono border capitalize ${typeColors[exp.type] || 'text-void-200 border-void-300/20'
+                        }`}
                     >
                       {exp.type.replace('-', ' ')}
                     </span>

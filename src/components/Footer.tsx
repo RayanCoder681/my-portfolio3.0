@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Brain, Heart, ArrowUp } from 'lucide-react';
-import { personalInfo } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 
 const Footer = () => {
+  const { personalInfo } = usePortfolioData();
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
@@ -13,7 +14,7 @@ const Footer = () => {
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-neural-300" />
             <span className="font-mono text-sm text-void-200">
-              {personalInfo.name} <span className="text-neural-300">·</span> ML & Data Science Student
+              {personalInfo.name} <span className="text-neural-300">·</span> {personalInfo.title}
             </span>
           </div>
 
@@ -38,9 +39,9 @@ const Footer = () => {
 
         <div className="mt-6 pt-6 border-t border-void-400/20 text-center">
           <p className="font-mono text-xs text-void-300">
-            © {new Date().getFullYear()} {personalInfo.name}. All rights reserved.{' '}
+            © {new Date().getFullYear()} {personalInfo.name}.
             <span className="text-neural-300/60 ml-2">
-              Crafted with precision & passion for AI.
+              Crafted with precision & passion using AI.
             </span>
           </p>
         </div>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Github, ExternalLink, FileText, ArrowRight, TrendingUp, Cpu, Database, Eye, Brain, Zap, X } from 'lucide-react';
+import { Github, ExternalLink, FileText, ArrowRight, TrendingUp, Cpu, Database, Eye, Brain, Zap, X, Globe, Code2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { projects } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import type { Project } from '../types';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
 
@@ -15,6 +15,7 @@ const categoryConfig: Record<string, { label: string; color: string; icon: React
   'data-science': { label: 'Data Science', color: 'text-green-300 border-green-400/40 bg-green-400/10', icon: Database },
   'reinforcement-learning': { label: 'Reinforcement Learning', color: 'text-plasma-400 border-plasma-400/40 bg-plasma-500/10', icon: TrendingUp },
   'machine-learning': { label: 'Machine Learning', color: 'text-cyan-300 border-cyan-400/40 bg-cyan-400/10', icon: Brain },
+  'web-development': { label: 'Web Development', color: 'text-blue-400 border-blue-400/40 bg-blue-500/10', icon: Globe },
 };
 
 const allCategories = ['all', ...Object.keys(categoryConfig)];
@@ -26,7 +27,7 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const [hovered, setHovered] = useState(false);
-  const config = categoryConfig[project.category];
+  const config = categoryConfig[project.category] || { label: project.category, color: 'text-void-100 border-void-400/40 bg-void-500/10', icon: Code2 };
   const CategoryIcon = config.icon;
   const navigate = useNavigate();
 
@@ -184,7 +185,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 };
 
 const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
-  const config = categoryConfig[project.category];
+  const config = categoryConfig[project.category] || { label: project.category, color: 'text-void-100 border-void-400/40 bg-void-500/10', icon: Code2 };
   const CategoryIcon = config.icon;
 
   return (
@@ -309,6 +310,7 @@ const Projects = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const { projects } = usePortfolioData();
 
   const selectedProject = id ? projects.find(p => p.id === id) : null;
 

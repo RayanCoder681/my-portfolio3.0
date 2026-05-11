@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, BookOpen, ExternalLink, Terminal } from 'lucide-react';
-import { personalInfo, stats } from '../data';
+import { ArrowDown, Github, Linkedin, BookOpen, ExternalLink, Terminal, RefreshCw } from 'lucide-react';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { staggerContainer, fadeInUp } from '../utils/animations';
+import { useTrack } from '../context/TrackContext';
 
 const roles = [
   'Machine Learning Student',
@@ -33,6 +34,9 @@ class NeuralPortfolio(nn.Module):
         )`;
 
 const Hero = () => {
+  const { track, setTrack } = useTrack();
+  const isWeb = track === 'web';
+  const { personalInfo, stats } = usePortfolioData();
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -70,6 +74,15 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Top Banner */}
+      <div className="absolute top-24 left-1/2 -translate-x-1/2 z-20 w-max max-w-[90vw]">
+        <div className="px-5 py-2.5 rounded-full border border-plasma-500/40 bg-void-600/80 backdrop-blur-md shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+          <span className="font-mono text-sm tracking-wide text-plasma-400 text-center flex items-center gap-2">
+            <span>✨</span> Made with passion using Ai
+          </span>
+        </div>
+      </div>
+
       {/* Background glow orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -162,7 +175,7 @@ const Hero = () => {
                 <span>View Projects</span>
                 <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
-              <a
+              {/* <a
                 href={personalInfo.scholar}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -170,7 +183,14 @@ const Hero = () => {
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 Research
-              </a>
+              </a> */}
+              <button
+                onClick={() => setTrack(isWeb ? 'ai' : 'web')}
+                className="flex items-center gap-2 px-6 py-3 rounded border border-violet-500/40 text-violet-400 font-mono text-sm hover:bg-violet-500/10 transition-all ml-auto lg:ml-0 group"
+              >
+                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+                {isWeb ? 'AI Engineer Road' : 'Web Developper Road'}
+              </button>
             </motion.div>
 
             {/* Social links */}

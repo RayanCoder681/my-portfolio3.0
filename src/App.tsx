@@ -7,42 +7,45 @@ import NeuralBackground from './components/NeuralBackground';
 import ScrollProgress from './components/ScrollProgress';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import { TrackProvider } from './context/TrackContext';
 
 function App() {
   return (
-    <BrowserRouter>
-      {/* Neural canvas background */}
-      <NeuralBackground />
+    <TrackProvider>
+      <BrowserRouter>
+        {/* Neural canvas background */}
+        <NeuralBackground />
 
-      {/* Scroll progress */}
-      <ScrollProgress />
+        {/* Scroll progress */}
+        <ScrollProgress />
 
-      {/* Neural grid overlay */}
-      <div className="fixed inset-0 neural-grid pointer-events-none z-0" />
+        {/* Neural grid overlay */}
+        <div className="fixed inset-0 neural-grid pointer-events-none z-0" />
 
-      {/* App shell */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <Navbar />
+        {/* App shell */}
+        <div className="relative z-10 min-h-screen flex flex-col">
+          <Navbar />
 
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<Home />} />
-            <Route path="/skills" element={<Home />} />
-            <Route path="/projects" element={<Home />} />
-            <Route path="/project/:id" element={<Home />} />
-            <Route path="/experience" element={<Home />} />
-            <Route path="/publications" element={<Home />} />
-            <Route path="/publications/:id" element={<Home />} />
-            <Route path="/contact" element={<Home />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<Home />} />
+              <Route path="/skills" element={<Home />} />
+              <Route path="/projects" element={<Home />} />
+              <Route path="/project/:id" element={<Home />} />
+              <Route path="/experience" element={<Home />} />
+              <Route path="/publications" element={<Home />} />
+              <Route path="/publications/:id" element={<Home />} />
+              <Route path="/contact" element={<Home />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnimatePresence>
 
-        <Footer />
-      </div>
-      <Analytics />
-    </BrowserRouter>
+          <Footer />
+        </div>
+        <Analytics />
+      </BrowserRouter>
+    </TrackProvider>
   );
 }
 

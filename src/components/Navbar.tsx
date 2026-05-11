@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Brain, Github, Linkedin, FileText } from 'lucide-react';
-import { personalInfo } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 
 const navItems = [
   { label: '01.about', href: '/about' },
@@ -18,6 +18,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const navigate = useNavigate();
+  const { personalInfo } = usePortfolioData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,7 +105,8 @@ const Navbar = () => {
                 <Linkedin className="w-4 h-4" />
               </a> */}
               <a
-                href="/rayan-diatsa-cv.pdf"
+                href="/pdf/rayan-diatsa-cv.pdf"
+                download="rayan-diatsa-cv.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-neural px-4 py-2 text-xs rounded flex items-center gap-2"

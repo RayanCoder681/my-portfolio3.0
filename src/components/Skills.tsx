@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { skillCategories } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { fadeInUp, staggerContainer, itemVariants } from '../utils/animations';
 
 const Skills = () => {
   const [activeCategory, setActiveCategory] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const { skillCategories } = usePortfolioData();
 
   const currentCategory = skillCategories[activeCategory];
 

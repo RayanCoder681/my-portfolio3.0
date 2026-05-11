@@ -2,35 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Mail, Github, Linkedin, BookOpen, Send, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
-import { personalInfo } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { fadeInLeft, fadeInRight, staggerContainer, fadeInUp } from '../utils/animations';
-
-const socials = [
-  {
-    icon: Github,
-    label: 'GitHub',
-    handle: 'RayanCoder681',
-    url: personalInfo.github,
-    description: 'Open source projects & code',
-    color: 'hover:text-white hover:border-white/30',
-  },
-  {
-    icon: Linkedin,
-    label: 'LinkedIn',
-    handle: 'Rayan Diatsa',
-    url: personalInfo.linkedin,
-    description: 'Professional network',
-    color: 'hover:text-blue-400 hover:border-blue-400/30',
-  },
-  {
-    icon: BookOpen,
-    label: 'Google Scholar',
-    handle: 'Rayan Diatsa',
-    url: personalInfo.scholar,
-    description: 'Research publications & citations',
-    color: 'hover:text-neural-300 hover:border-neural-300/30',
-  },
-];
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -38,6 +11,34 @@ const Contact = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<FormStatus>('idle');
+  const { personalInfo } = usePortfolioData();
+
+  const socials = [
+    {
+      icon: Github,
+      label: 'GitHub',
+      handle: 'RayanCoder681',
+      url: personalInfo.github,
+      description: 'Open source projects & code',
+      color: 'hover:text-white hover:border-white/30',
+    },
+    {
+      icon: Linkedin,
+      label: 'LinkedIn',
+      handle: 'Rayan Diatsa',
+      url: personalInfo.linkedin,
+      description: 'Professional network',
+      color: 'hover:text-blue-400 hover:border-blue-400/30',
+    },
+    {
+      icon: BookOpen,
+      label: 'Google Scholar',
+      handle: 'Rayan Diatsa',
+      url: personalInfo.scholar,
+      description: 'Research publications & citations',
+      color: 'hover:text-neural-300 hover:border-neural-300/30',
+    },
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

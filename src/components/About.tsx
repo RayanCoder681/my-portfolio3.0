@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { MapPin, Mail, GraduationCap, Code2, BookMarked, User } from 'lucide-react';
-import { personalInfo } from '../data';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { fadeInUp, fadeInLeft, fadeInRight, staggerContainer } from '../utils/animations';
 
 const education = [
@@ -30,6 +30,7 @@ const interests = [
 
 const About = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const { personalInfo } = usePortfolioData();
 
   return (
     <section id="about" className="py-32 relative" ref={ref}>

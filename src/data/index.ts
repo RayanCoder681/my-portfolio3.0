@@ -2,7 +2,7 @@ import type { Project, SkillCategory, Experience, Publication, Stat } from '../t
 
 export const personalInfo = {
   name: 'Rayan Diatsa',
-  title: 'ML & Data Science Student ',
+  title: 'Web dev et AI engineer Student',
   tagline: 'Building intelligent systems at the intersection of research and production.',
   bio: `Passionate ML Engineer with 2+ years turning complex data into intelligent systems. I specialize in deep learning architectures, NLP, and scalable MLOps pipelines. My work spans from crafting novel transformer-based models to deploying production-grade AI at scale.`,
   location: 'Yaounde, Cameroun',
@@ -430,6 +430,121 @@ Avoir conscience de l'étanchéité absolue qui doit exister entre votre Train e
 
 > **Conseil bonus :** Si vous utilisez scikit-learn, le module \`Pipeline\` est conçu exactement pour éviter ce type de fuite en enchaînant les transformations proprement sur vos folds de données !`,
     tags: ['Machine Learning', 'Data Preprocessing', 'Best Practices', 'Python'],
+  },
+  {
+    id: 'logistic-regression-from-scratch',
+    title: 'Épisode 3 : Régression Logistique From Scratch — Quand la Droite Apprend à Dire Oui ou Non',
+    authors: ['Rayan Diatsa'],
+    venue: 'Portfolio Blog',
+    year: 2026,
+    type: 'article',
+    abstract: 'Après la Régression Linéaire et le KNN, j\'ai codé une Régression Logistique entièrement from scratch. Retour sur la sigmoïde, la descente de gradient, et les pièges rencontrés en chemin.',
+    content: `## Introduction
+Après avoir implémenté la **Régression Linéaire** (Épisode 1) et le **KNN** (Épisode 2), il était temps de franchir un cap : passer de la **régression** (prédire un nombre) à la **classification** (prédire une catégorie).
+
+La **Régression Logistique** est le pont parfait entre ces deux mondes. Malgré son nom trompeur, ce n'est pas un algorithme de régression — c'est un classifieur binaire. Et sous son apparente simplicité se cache une mécanique élégante que j'ai voulu comprendre en profondeur en la codant de zéro.
+
+---
+
+## Le Cœur de l'Algorithme : La Fonction Sigmoïde
+
+En régression linéaire, la sortie est un nombre réel quelconque : \\\`ŷ = X·w + b\\\`. Mais pour la classification, on a besoin d'une **probabilité** entre 0 et 1.
+
+C'est le rôle de la **sigmoïde** :
+
+\\\`\\\`\\\`python
+def model(X, w, b):
+    Z = X.dot(w) + b
+    A = 1 / (1 + np.exp(-Z))
+    return A
+\\\`\\\`\\\`
+
+Cette fonction "écrase" n'importe quelle valeur réelle dans l'intervalle [0, 1]. Si le résultat est ≥ 0.5, on prédit la classe 1, sinon la classe 0.
+
+---
+
+## Le Coût : Binary Cross-Entropy (Log-Loss)
+
+Comment savoir si notre modèle se trompe ? On ne peut pas utiliser le MSE (Mean Squared Error) de la régression linéaire — la surface serait non-convexe et la descente de gradient resterait bloquée dans des minimums locaux.
+
+On utilise plutôt le **Log-Loss** :
+
+\\\`\\\`\\\`python
+def log_loss(y, A):
+    m = len(y)
+    epsilon = 1e-15
+    A = np.clip(A, epsilon, 1 - epsilon)
+    J = -1 / m * np.sum(y * np.log(A) + (1 - y) * np.log(1 - A))
+    return J
+\\\`\\\`\\\`
+
+**L'intuition :**
+- Si \\\`y=1\\\` et le modèle prédit \\\`A≈1\\\` → \\\`log(1) = 0\\\` → coût faible ✅
+- Si \\\`y=1\\\` et le modèle prédit \\\`A≈0\\\` → \\\`log(0) → -∞\\\` → coût énorme ❌
+
+Le \\\`np.clip\\\` est crucial : sans lui, \\\`log(0)\\\` produit \\\`-inf\\\` et fait exploser tout le calcul. Un piège classique !
+
+---
+
+## La Descente de Gradient : Apprendre Pas à Pas
+
+Le modèle s'améliore en ajustant ses poids \\\`w\\\` et son biais \\\`b\\\` à chaque itération :
+
+\\\`\\\`\\\`python
+def gradients(X, A, y):
+    m = len(y)
+    dw = 1 / m * X.T.dot(A - y)    # Direction du changement pour w
+    db = 1 / m * np.sum(A - y)      # Direction du changement pour b
+    return (dw, db)
+
+def update(w, b, dw, db, learning_rate):
+    w = w - learning_rate * dw
+    b = b - learning_rate * db
+    return (w, b)
+\\\`\\\`\\\`
+
+**Ce que j'ai appris :** Le \\\`learning_rate\\\` est vraiment un exercice d'équilibre :
+- **Trop petit** (0.0001) → le modèle converge, mais il faut 100k itérations
+- **Trop grand** (10.0) → la loss oscille et ne descend jamais
+- **Le bon compromis** (0.01 à 0.1 après normalisation) → convergence en ~1000 itérations
+
+---
+
+## Le Pipeline Complet
+
+L'ensemble s'orchestre dans une fonction maîtresse qui enchaîne les étapes à chaque itération :
+
+\\\`\\\`\\\`python
+for i in range(n_iter):
+    A_train = model(X_train, w, b)       # 1. Forward Pass
+    loss = log_loss(y_train, A_train)     # 2. Calcul du coût
+    dw, db = gradients(X_train, A_train, y_train)  # 3. Backward Pass
+    w, b = update(w, b, dw, db, lr)      # 4. Mise à jour
+\\\`\\\`\\\`
+
+C'est exactement la même boucle que pour un réseau de neurones — la Régression Logistique n'est rien d'autre qu'un **neurone artificiel unique** !
+
+---
+
+## Les Pièges Rencontrés 🐛
+
+**1. La normalisation est obligatoire**
+Sans normalisation Z-Score, les features avec des valeurs très différentes (âge: 20-80, revenu: 10000-100000) déséquilibrent complètement les gradients. Le modèle converge en 50 itérations avec normalisation, vs. ne converge pas du tout sans.
+
+**2. Le reshape des labels**
+Les labels \\\`y\\\` doivent avoir le shape \\\`(m, 1)\\\` et non \\\`(m,)\\\`. Sinon, le broadcasting NumPy crée des matrices géantes silencieusement au lieu de vecteurs — et la loss affiche des valeurs absurdes sans qu'aucune erreur ne soit levée.
+
+**3. Le log(0) silencieux**
+Sans le \\\`np.clip(A, epsilon, 1-epsilon)\\\`, une prédiction parfaite de 0 ou 1 provoque \\\`log(0) = -inf\\\`, qui se propage dans toute la chaîne de calcul.
+
+---
+
+## Conclusion
+
+La Régression Logistique est bien plus qu'un simple classificateur — c'est la **porte d'entrée vers le Deep Learning**. En la codant from scratch, on comprend que chaque réseau de neurones n'est qu'un empilement de ces mêmes briques : sigmoïde, coût, gradient, mise à jour.
+
+Le prochain épisode ? Coder un **arbre de décision** from scratch, pour découvrir une approche radicalement différente de la classification.`,
+    tags: ['Machine Learning', 'Logistic Regression', 'Gradient Descent', 'Python', 'From Scratch'],
   },
   // {
   //   id: 'pub1',
